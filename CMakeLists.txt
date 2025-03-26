@@ -90,3 +90,12 @@ install(
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(TARGETS OpenDrive EXPORT OpenDriveConfig)
 install(EXPORT OpenDriveConfig NAMESPACE OpenDrive:: DESTINATION cmake)
+
+add_executable(extract_map scripts/extract_map.cpp)
+
+target_include_directories(extract_map PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_BINARY_DIR}/_deps/pugixml-src/src
+)
+
+target_link_libraries(extract_map PRIVATE OpenDrive)
