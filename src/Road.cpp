@@ -137,7 +137,8 @@ Vec3D Road::get_xyz(const double s, const double t, const double h, Vec3D* _e_s,
     return xyz;
 }
 
-Vec3D Road::get_surface_pt(double s, const double t, Vec3D* vn) const
+// Vec3D Road::get_surface_pt(double s, const double t, Vec3D* vn) const
+Vec3D Road::get_surface_pt(double s, const double t, Vec3D* vn, Vec3D* vf) const
 {
     ODR_CHECK_AND_REPAIR(s >= 0, "s < 0", s = 0);
     ODR_CHECK_AND_REPAIR(s <= this->length, "s > Road::length", s = this->length);
@@ -192,7 +193,8 @@ Vec3D Road::get_surface_pt(double s, const double t, Vec3D* vn) const
         }
     }
 
-    return this->get_xyz(s, t, h_t, nullptr, nullptr, vn);
+    // return this->get_xyz(s, t, h_t, nullptr, nullptr, vn);
+    return this->get_xyz(s, t, h_t, vf, nullptr, vn);
 }
 
 std::set<double>

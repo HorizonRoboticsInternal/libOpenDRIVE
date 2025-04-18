@@ -7,7 +7,7 @@ void export_lane_points(const odr::OpenDriveMap& odr_map, const std::string& out
 {
     std::ofstream outfile(output_path);
     assert(outfile.is_open() && "Failed to open output file");
-    outfile << "road_id,junction_id,lanesection_s0,lane_id,type,x,y,z,x_left,y_left,z_left,x_right,y_right,z_right\n";
+    outfile << "road_id,junction_id,lanesection_s0,lane_id,type,x,y,z,s,width,forward_x,forward_y,forward_z\n";
 
     for (const odr::Road& road : odr_map.get_roads())
     {
@@ -31,15 +31,13 @@ void export_lane_points(const odr::OpenDriveMap& odr_map, const std::string& out
                     double t_inner = inner_neighbor_lane.outer_border.get(s_sample);
                     double t_center = 0.5 * (t_outer + t_inner);
 
-                    odr::Vec3D normal;
-                    odr::Vec3D pt = road.get_surface_pt(s_sample, t_center, &normal);
-                    odr::Vec3D left_pt = road.get_surface_pt(s_sample, std::max(t_outer, t_inner));
-                    odr::Vec3D right_pt = road.get_surface_pt(s_sample, std::min(t_outer, t_inner));
+                    odr::Vec3D normal, forward;
+                    odr::Vec3D pt = road.get_surface_pt(s_sample, t_center, &normal, &forward);
 
+                    double width = std::abs(t_outer - t_inner);
                     outfile << road.id << "," << road.junction << "," << lanesection.s0 << "," << lane.id << "," << lane.type << ","
-                            << pt[0] << "," << pt[1] << "," << pt[2] << ","
-                            << left_pt[0] << "," << left_pt[1] << "," << left_pt[2] << ","
-                            << right_pt[0] << "," << right_pt[1] << "," << right_pt[2] << "\n";
+                            << pt[0] << "," << pt[1] << "," << pt[2] << "," << s_sample << ","
+                            << width << "," << forward[0] << "," << forward[1] << "," << forward[2] << "\n";
 
                     if (s_sample == s_end) break;
                     s += eps;
@@ -95,12 +93,15 @@ void export_crosswalk_corners(const odr::OpenDriveMap& odr_map, const std::strin
 
 int main()
 {
+    // odr::OpenDriveMap odr_map("/home/carla/CarlaUnreal/Content/Carla/Maps/OpenDrive/Town03_Opt.xodr");
     odr::OpenDriveMap odr_map("/home/carla/CarlaUnreal/Content/Carla/Maps/OpenDrive/Town03_Opt.xodr");
     assert(odr_map.xml_parse_result && "Failed to parse test.xodr");
 
     // sample resolution
     const double eps = 1.00;
 
-    export_lane_points(odr_map, "/home/FlashDrive/temp/town03_map.csv", eps);
-    export_crosswalk_corners(odr_map, "/home/FlashDrive/temp/crosswalks.csv");
+    // export_lane_points(odr_map, "/home/FlashDrive/temp/town03_map.csv", eps);
+    // export_crosswalk_corners(odr_map, "/home/FlashDrive/temp/town03_crosswalks.csv");
+    export_lane_points(odr_map, "/home/FlashDrive/temp/Town03_map.csv", eps);
+    export_crosswalk_corners(odr_map, "/home/FlashDrive/temp/Town03_crosswalks.csv");
 }

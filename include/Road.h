@@ -94,7 +94,8 @@ public:
     double get_lanesection_length(const double lanesection_s0) const;
 
     Vec3D get_xyz(const double s, const double t, const double h, Vec3D* e_s = nullptr, Vec3D* e_t = nullptr, Vec3D* e_h = nullptr) const;
-    Vec3D get_surface_pt(double s, const double t, Vec3D* vn = nullptr) const;
+    // Vec3D get_surface_pt(double s, const double t, Vec3D* vn = nullptr) const;
+    Vec3D get_surface_pt(double s, const double t, Vec3D* vn = nullptr, Vec3D* vf = nullptr) const;
 
     Line3D get_lane_border_line(const Lane& lane, const double s_start, const double s_end, const double eps, const bool outer = true) const;
     Line3D get_lane_border_line(const Lane& lane, const double eps, const bool outer = true) const;
