@@ -91,10 +91,19 @@ void export_crosswalk_corners(const odr::OpenDriveMap& odr_map, const std::strin
     std::cout << "Crosswalk corners written to " << output_path << std::endl;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    // odr::OpenDriveMap odr_map("/home/carla/CarlaUnreal/Content/Carla/Maps/OpenDrive/Town03_Opt.xodr");
-    odr::OpenDriveMap odr_map("/home/carla/CarlaUnreal/Content/Carla/Maps/OpenDrive/Town03_Opt.xodr");
+    if (argc < 4)
+    {
+        std::cerr << "Usage: " << argv[0] << " <path_to_xodr_file> <path_to_map_csv> <path_to_crosswalk_csv>" << std::endl;
+        return 1;
+    }
+    // Parse command line arguments
+    std::string xodr_file = argv[1];
+    std::string map_output = argv[2];
+    std::string crosswalk_output = argv[3];
+
+    odr::OpenDriveMap odr_map(xodr_file);
     assert(odr_map.xml_parse_result && "Failed to parse test.xodr");
 
     // sample resolution
@@ -102,6 +111,6 @@ int main()
 
     // export_lane_points(odr_map, "/home/FlashDrive/temp/town03_map.csv", eps);
     // export_crosswalk_corners(odr_map, "/home/FlashDrive/temp/town03_crosswalks.csv");
-    export_lane_points(odr_map, "/home/FlashDrive/temp/Town03_map.csv", eps);
-    export_crosswalk_corners(odr_map, "/home/FlashDrive/temp/Town03_crosswalks.csv");
+    export_lane_points(odr_map, map_output, eps);
+    export_crosswalk_corners(odr_map, crosswalk_output);
 }
